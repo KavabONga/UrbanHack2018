@@ -3,15 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>TheMap</title>
     <link rel="stylesheet" type="text/css" href={{url_for('static', filename='css/mapPage.css')}}>
     <script src={{url_for('static', filename='js/jquery.min.js')}}></script>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&load=package.full" type="text/javascript"></script>
     <script src={{url_for('static', filename='js/mapScript.js')}}></script>
 </head>
 
-<body>
-    <div id="map">
+<body onload="setupMap()">
+    <div id="mainMap">
     </div>
 </body>
 </html>
