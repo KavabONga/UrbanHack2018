@@ -22,20 +22,18 @@ function addSpeedBumpView(map) {
     $.get(
         '/SpeedBumps',
         function(data) {
-            console.log(data);
             bumpCollection = new ymaps.GeoObjectCollection();
             for (speedbump in data) {
                 mark = new ymaps.Placemark(data[speedbump].coordinates, {
-                    balloonContent: data[speedbump].street
+                    balloonContent: data[speedbump].street,
+                    id : speedbump
                 }, {
                     preset: 'islands#circleIcon'
                 });
-                mark.events.add('click', function() {
-                    console.log(speedbump);
+                mark.events.add('click', function(e){
                     $.get(
-                        '/CarPaths?id=' + speedbump,
+                        '/CarPaths?id=' + e.get('target').properties.get('id'),
                         function(routeData) {
-                            console.log(routeData);
                             for (c in routeData) {
                                 car = routeData[c];
                                 for (r = 0; r < car.touches.length - 1; r += 1){
@@ -45,7 +43,6 @@ function addSpeedBumpView(map) {
                                         data[parseInt(car.touches[r].id)].coordinates,
                                         data[parseInt(car.touches[r + 1].id)].coordinates,
                                     ]).done(function(route) {
-                                        console.log("Wahaha");
                                         map.geoObjects.add(route);
                                     });
                                 }
@@ -69,7 +66,11 @@ function addCarCountView(map) {
                 countCollection.add(
                     new ymaps.Placemark(data[c].coordinates, {
                         iconContent : data[c].count,
-                        balloonContent : "<b>Количество проехавших машин</b>: " + data[c].count + "<br><b>Суммарная масса</b>: " + data[c].summaryWeight + " (тонн)"
+                        balloonContent : "<b>Количество проехавших машин</b>: " + data[c].count +
+                                         "<br><b>Суммарная масса</b>: " + data[c].summaryWeight + " (тонн)<br><hr>" +
+                                         "Количество легковых: " + data[c].classes['light-weighted'] + "<br>" +
+                                         "Количество средних: " + data[c].classes['average-weighted'] + "<br>" +
+                                         "Количество тяжёлых: " + data[c].classes['heavy-weighted'] 
                     }, {
                         preset : "islands#redCircleIcon"
                     })
@@ -104,8 +105,8 @@ function addHeatmapView(map) {
                 var heatmap = new Heatmap({type:'FeatureCollection', features : featuresData}, {
                     gradient: {
                         0.1: 'rgba(128, 255, 0, 0.7)',
-                        0.7: 'rgba(255, 255, 0, 0.8)',
-                        0.9: 'rgba(234, 72, 58, 0.9)',
+                        0.4: 'rgba(255, 255, 0, 0.8)',
+                        0.6: 'rgba(234, 72, 58, 0.9)',
                         1.0: 'rgba(0, 0, 0, 1)'
                     }
                 });

@@ -18,10 +18,24 @@ def speed_bumps():
 
 @app.route('/CarCount')
 def car_count():
+    from Scripts.classification import Weight_Sort
     speedbumps = eval(open('res/speedbumps.json', 'r').read())
     carinfo = eval(open('res/carinfo-29-09.json', 'r').read())
-    carinfo = [{'coordinates' : speedbumps[c['ID']]['geoData']['coordinates'], 'count' : len(c['events']), 'summaryWeight' : round(sum([k['weight'] for k in c['events']]), 2)} for c in carinfo]
-    return jsonify(carinfo)
+    carinfoNew = []
+    for c in carinfo:
+        ws = Weight_Sort([k['weight'] for k in c['events']])
+        classes = {
+            'light-weighted' : ws[0],
+            'average-weighted' : ws[1],
+            'heavy-weighted' : ws[2]
+        }
+        carinfoNew.append({
+            'coordinates' : speedbumps[c['ID']]['geoData']['coordinates'],
+            'count' : len(c['events']),
+            'summaryWeight' : round(sum([k['weight'] for k in c['events']]), 2),
+            'classes' : classes
+        })
+    return jsonify(carinfoNew)
 
 @app.route('/StreetDensity')
 def street_density():

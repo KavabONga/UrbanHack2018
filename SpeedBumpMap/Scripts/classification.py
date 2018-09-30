@@ -2,12 +2,12 @@ def Weight_Sort(a):
   passenger_car=0
   busOrLiteTrack=0
   truck=0
-  for j in range (1,len(a)):
-    if (a[i] <=3):
+  for i in range (1,len(a)):
+    if (a[i] <=18):
       passenger_car += 1
-    elif(3 < a[i] <= 8):
+    elif(a[i] <= 24):
       busOrLiteTrack += 3
-    elif(a[i] > 8):
+    else:
       truck += 1
   classified_cars = [passenger_car, busOrLiteTrack, truck]
   return classified_cars
