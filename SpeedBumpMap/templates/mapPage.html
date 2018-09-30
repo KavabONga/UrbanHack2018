@@ -10,7 +10,15 @@
     <script src={{url_for('static', filename='js/mapScript.js')}}></script>
 </head>
 
-<body onload="setupMap()">
+<body onload="setupPage()">
+    <div id="header" hidden>
+        <div>
+            <button id="speedbump-button">Speedbumps</button>
+        </div>
+        <div>
+            <button id="carcount-button">Car count</button>
+        </div>
+    </div>
     <div id="mainMap">
     </div>
 </body>
