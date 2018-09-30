@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>TheMap</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href={{url_for('static', filename='css/mapPage.css')}}>
     <script src={{url_for('static', filename='js/jquery.min.js')}}></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&load=package.full" type="text/javascript"></script>
@@ -14,16 +15,16 @@
 <body onload="setupPage()">
     <div id="header" hidden>
         <div>
-            <button id="speedbump-button">Speedbumps</button>
+            <button class="btn btn-primary" id="speedbump-button">Speedbumps</button>
         </div>
         <div>
-            <button id="carcount-button">Car count</button>
+            <button class="btn btn-primary" id="carcount-button">Car count</button>
         </div>
         <div>
-            <button id="heatmap-button">Heatmap</button>
+            <button class="btn btn-primary" id="heatmap-button">Heatmap</button>
         </div>
         <div>
-            <button id="realtime-button"> Real time</button>
+            <button class="btn btn-primary" id="realtime-button"> Real time</button>
         </div>
     </div>
     <div id="mainMap">
