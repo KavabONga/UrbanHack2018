@@ -87,6 +87,54 @@ function addHeatmapView(map) {
     })
 }
 
+function addRealTimeView(map) {
+    ymaps.modules.require(['Heatmap'], function(Heatmap) {
+        $.get(
+            '/TimeSorted',
+            function(data) {
+                var weightDict = {}, featuresData = {type:'FeatureCollection', features : []};
+                var heatmap = new Heatmap(featuresData);
+                heatmap.setMap(map);
+                var i = 0, step = parseInt(data.length / 5000);
+                addInterval = setInterval(function() {
+                    for (j = i; j < Math.min(i + step, data.length); j += 1) {
+                        if (!(data[j].ID in weightDict)) {
+                            featuresData.features.push(
+                                {
+                                    id:'id' + j,
+                                    type:'Feature',
+                                    geometry: {
+                                        type:'Point',
+                                        coordinates: data[j].coordinates
+                                    },
+                                    properties: {
+                                        weight: data[j].density
+                                    }
+                                }
+                            );
+                            weightDict[data[j].ID] = featuresData.features.length - 1;
+                        }
+                        else {
+                            featuresData.features[weightDict[data[j].ID]].properties.weight += data[j].weight;
+                        }
+                    }
+                    heatmap.setData(featuresData);
+                    i += step;
+                    if (i >= data.length) {
+                        featuresData = {type:'FeatureCollection', features : []};
+                        weightDict = {};
+                        i = 0;
+                    }
+                }, 400);
+                $('button').click(function(){
+                    heatmap.destroy();
+                    clearInterval(addInterval);
+                })
+            }
+        )
+    })
+}
+
 function headerAlign() {
     headerJ = $('#header');
     headerJ.children().css('display', 'block');
@@ -112,5 +160,6 @@ function setupPage() {
         $("#speedbump-button").click(switchViewCallback(map, addSpeedBumpView));
         $("#carcount-button").click(switchViewCallback(map, addCarCountView));
         $("#heatmap-button").click(switchViewCallback(map, addHeatmapView));
+        $("#realtime-button").click(switchViewCallback(map, addRealTimeView));
     });
 }

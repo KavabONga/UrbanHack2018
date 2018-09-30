@@ -32,18 +32,36 @@ def street_density():
 @app.route('/SummaryData')
 def summary_data():
     carinfo = eval(open('res/carinfo-29-09.json', 'r').read())
-    axles = {i : 0 for i in range(2, 6)}
-    sum_cars = 0
-    for c in carinfo:
-        for e in c['events']:
-            axles[e[axles]] += 1
-        sum_cars += len(events)
-    return jsonify({'sumCars' : sum_cars, 'axles' : axles})
+    weights = [t['weight'] for t in c]
+    from Scripts.classified_cars import Weight_Sort
+    ws = Weight_Sort(weights)
+
+    return jsonify(
+        {
+            'sumCars' : len(weights),
+            'classes' : {
+                'light-weighted' : ws[0],
+                'average-weighted' : ws[1],
+                'heavy-weighted' : ws[2]
+            }
+        }
+    )
 
 @app.route('/TimeSorted')
 def time_sorted():
+    speedbumps = eval(open('res/speedbumps.json', 'r').read())
     carinfo = eval(open('res/carinfo-29-09.json', 'r').read())
     times = []
     for c in carinfo:
         for e in c['events']:
-            times.append({'time' : e['time']})
+            times.append({
+                'time' : e['time'],
+                'weight' : e['weight'],
+                'coordinates' : speedbumps[c['ID']]['geoData']['coordinates'],
+                'ID' : c['ID']
+            })
+    return jsonify(sorted(times, key=lambda x : x['time']))
+
+@app.route('/statistics')
+def statistics():
+    return render_template('statistics.html')
