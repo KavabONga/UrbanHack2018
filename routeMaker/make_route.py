@@ -9,8 +9,8 @@ def check(event,id):
             check_events[i].append(event)
 
 
-inp_dict = open("IDs.json", "r").read()
-inp_json = open("carinfo-29-09.json", "r").read()
+inp_dict = open("res/IDs.json", "r").read()
+inp_json = open("../SpeedBumpMap/res/carinfo-29-09.json", "r").read()
 carinfo = eval(inp_json)
 id_dict = eval(inp_dict)
 check_bump_id = int(input())
@@ -32,7 +32,7 @@ for car in check_events:
     car.sort(key= lambda this_car: this_car['time'])
 print(check_events)
 
-ans_json = open("ans.json", "w")
+ans_json = open("routes.json", "w")
 
 
 ans = list()
@@ -49,24 +49,3 @@ for car in check_events:
     ans.append(tmp_dict)
 ans_json.write(json.dumps(ans))
 
-
-"""
-
-
-json:
-[
-    {
-    "axles":1,
-    "weight":1,
-    "touches":
-        [
-            {
-            "id":1,
-            "time":1
-            },
-        ]
-    },
-]
-
-
-"""
