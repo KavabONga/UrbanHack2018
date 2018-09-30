@@ -77,7 +77,14 @@ function addHeatmapView(map) {
                         }
                     );
                 }
-                var heatmap = new Heatmap({type:'FeatureCollection', features : featuresData})
+                var heatmap = new Heatmap({type:'FeatureCollection', features : featuresData}, {
+                    gradient: {
+                        0.1: 'rgba(128, 255, 0, 0.7)',
+                        0.7: 'rgba(255, 255, 0, 0.8)',
+                        0.9: 'rgba(234, 72, 58, 0.9)',
+                        1.0: 'rgba(0, 0, 0, 1)'
+                    }
+                });
                 heatmap.setMap(map);
                 $('button').click(function(){
                     heatmap.destroy();
@@ -93,9 +100,16 @@ function addRealTimeView(map) {
             '/TimeSorted',
             function(data) {
                 var weightDict = {}, featuresData = {type:'FeatureCollection', features : []};
-                var heatmap = new Heatmap(featuresData);
+                var heatmap = new Heatmap(featuresData, {
+                    gradient: {
+                        0.1: 'rgba(128, 255, 0, 0.7)',
+                        0.7: 'rgba(255, 255, 0, 0.8)',
+                        0.9: 'rgba(234, 72, 58, 0.9)',
+                        1.0: 'rgba(0, 0, 0, 1)'
+                    }
+                });
                 heatmap.setMap(map);
-                var i = 0, step = parseInt(data.length / 5000);
+                var i = 0, step = parseInt(data.length / 2000);
                 addInterval = setInterval(function() {
                     for (j = i; j < Math.min(i + step, data.length); j += 1) {
                         if (!(data[j].ID in weightDict)) {
@@ -123,6 +137,7 @@ function addRealTimeView(map) {
                     i += step;
                     if (i >= data.length) {
                         featuresData = {type:'FeatureCollection', features : []};
+                        heatmap.setData(featuresData);
                         weightDict = {};
                         i = 0;
                     }
@@ -130,6 +145,7 @@ function addRealTimeView(map) {
                 $('button').click(function(){
                     heatmap.destroy();
                     clearInterval(addInterval);
+                    $("#heatmapTime").text("");
                 })
             }
         )
@@ -157,7 +173,7 @@ function setupPage() {
     $(window).resize(headerAlign);
     ymaps.ready(function() {
         var map = MoscowMap("mainMap");
-        addSpeedBumpView(map);
+        addHeatmapView(map);
         $("#speedbump-button").click(switchViewCallback(map, addSpeedBumpView));
         $("#carcount-button").click(switchViewCallback(map, addCarCountView));
         $("#heatmap-button").click(switchViewCallback(map, addHeatmapView));

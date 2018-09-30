@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__, )
 
@@ -65,3 +65,13 @@ def time_sorted():
 @app.route('/statistics')
 def statistics():
     return render_template('statistics.html')
+
+@app.route('/CarPaths')
+def car_paths():
+    from Scripts.make_route import make_route
+    res = [d for d in make_route(request.args.get('id')) if len(d['touches']) > 1]
+    return jsonify(res)
+
+if __name__ == '__main__':
+    from Scripts.make_route import make_route
+    print(make_route(13))
