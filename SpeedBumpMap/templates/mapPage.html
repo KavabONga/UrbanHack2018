@@ -9,8 +9,6 @@
     <title>TheMap</title>
     <!--Bootstrap-->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <!--Morris diagrams-->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <!--Custom-->
     <link rel="stylesheet" type="text/css" href={{url_for('static', filename='css/mapPage.css')}}>
 </head>
@@ -28,15 +26,20 @@
         </div>
         <div>
             <button class="btn btn-primary" id="realtime-button"> Real time</button>
+            <span id="heatmapTime">Default</span>
         </div>
     </div>
     <div id="mainMap">
     </div>
+
+    <!-- Это для отображения диаграммы
+    <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+    -->
 <!-- Скрипты -->
-    <!--Morris diagrams-->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <!-- Diagram plugin-->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <!--Custom-->
     <script src={{url_for('static', filename='js/jquery.min.js')}}></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&load=package.full" type="text/javascript"></script>

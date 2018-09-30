@@ -119,6 +119,7 @@ function addRealTimeView(map) {
                         }
                     }
                     heatmap.setData(featuresData);
+                    $("#heatmapTime").text((new Date(data[i].time * 1000)).toTimeString().split(' ')[0]);
                     i += step;
                     if (i >= data.length) {
                         featuresData = {type:'FeatureCollection', features : []};
