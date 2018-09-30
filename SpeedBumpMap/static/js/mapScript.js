@@ -56,13 +56,44 @@ function addCarCountView(map) {
     )
 }
 
+function addHeatmapView(map) {
+    ymaps.modules.require(['Heatmap'], function(Heatmap) {
+        $.get(
+            '/StreetDensity',
+            function(data) {
+                var featuresData = []
+                for (i in data) {
+                    featuresData.push(
+                        {
+                            id:'id' + i,
+                            type:'Feature',
+                            geometry: {
+                                type:'Point',
+                                coordinates: data[i].coordinates
+                            },
+                            properties: {
+                                weight: data[i].density
+                            }
+                        }
+                    );
+                }
+                var heatmap = new Heatmap({type:'FeatureCollection', features : featuresData})
+                heatmap.setMap(map);
+                $('button').click(function(){
+                    heatmap.destroy();
+                })
+            }
+        )
+    })
+}
+
 function headerAlign() {
     headerJ = $('#header');
     headerJ.children().css('display', 'block');
     headerJ.children().css('width', 100/headerJ.children().length + '%');
 }
 
-function switchView(map, view_func_add) {
+function switchViewCallback(map, view_func_add) {
     return function() {
         map.geoObjects.removeAll();
         view_func_add(map);
@@ -78,8 +109,8 @@ function setupPage() {
     ymaps.ready(function() {
         var map = MoscowMap("mainMap");
         addSpeedBumpView(map);
-        $("#speedbump-button").click(switchView(map, addSpeedBumpView));
-        $("#carcount-button").click(switchView(map, addCarCountView));
-        window.map = map;
+        $("#speedbump-button").click(switchViewCallback(map, addSpeedBumpView));
+        $("#carcount-button").click(switchViewCallback(map, addCarCountView));
+        $("#heatmap-button").click(switchViewCallback(map, addHeatmapView));
     });
 }
