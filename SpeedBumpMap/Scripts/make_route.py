@@ -7,8 +7,8 @@ def make_route(bump_id):
         for i in range(len(check_events)):
             if event['axles'] == check_events[i][0]['axles'] and \
                event['weight'] == check_events[i][0]['weight'] and\
-               math.fabs(event['time'] - check_events[i][0]['time']) <= 1800:
-                event['id'] = id_dict[str(this_bump_id)]
+               math.fabs(event['time'] - check_events[i][0]['time']) <= 3600:
+                event['id'] = this_bump_id
                 check_events[i].append(event)
     inp_dict = open("/home/finn/Git-Workspace/UrbanHack2018/SpeedBumpMap/res/IDs.json", "r").read()
     inp_json = open("/home/finn/Git-Workspace/UrbanHack2018/SpeedBumpMap/res/carinfo-29-09.json", "r").read()
@@ -42,4 +42,4 @@ def make_route(bump_id):
             one_more_tmp_dict['id'] = i['id']
             tmp_dict['touches'].append(one_more_tmp_dict)
         ans.append(tmp_dict)
-    return json.dumps(ans)
+    return ans

@@ -22,14 +22,38 @@ function addSpeedBumpView(map) {
     $.get(
         '/SpeedBumps',
         function(data) {
+            console.log(data);
             bumpCollection = new ymaps.GeoObjectCollection();
             for (speedbump in data) {
-                bumpCollection.add(new ymaps.Placemark(data[speedbump].coordinates, {
+                mark = new ymaps.Placemark(data[speedbump].coordinates, {
                     balloonContent: data[speedbump].street
                 }, {
-                    preset: 'islands#circleIcon',
-                    openEmptyBaloon: true
-                }));
+                    preset: 'islands#circleIcon'
+                });
+                mark.events.add('click', function() {
+                    console.log(speedbump);
+                    $.get(
+                        '/CarPaths?id=' + speedbump,
+                        function(routeData) {
+                            console.log(routeData);
+                            for (c in routeData) {
+                                car = routeData[c];
+                                for (r = 0; r < car.touches.length - 1; r += 1){
+                                    console.log(car.touches[r].id);
+                                    console.log(car.touches[r + 1].id);
+                                    ymaps.route([
+                                        data[parseInt(car.touches[r].id)].coordinates,
+                                        data[parseInt(car.touches[r + 1].id)].coordinates,
+                                    ]).done(function(route) {
+                                        console.log("Wahaha");
+                                        map.geoObjects.add(route);
+                                    });
+                                }
+                            }
+                        }
+                    )
+                });
+                bumpCollection.add(mark);
             }
             map.geoObjects.add(bumpCollection);
         }
@@ -173,7 +197,7 @@ function setupPage() {
     $(window).resize(headerAlign);
     ymaps.ready(function() {
         var map = MoscowMap("mainMap");
-        addHeatmapView(map);
+        addSpeedBumpView(map);
         $("#speedbump-button").click(switchViewCallback(map, addSpeedBumpView));
         $("#carcount-button").click(switchViewCallback(map, addCarCountView));
         $("#heatmap-button").click(switchViewCallback(map, addHeatmapView));

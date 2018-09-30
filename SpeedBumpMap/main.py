@@ -9,10 +9,11 @@ def mainMap():
 @app.route('/SpeedBumps')
 def speed_bumps():
     speedbumps = eval(open('res/speedbumps.json', 'r').read())
-    speedbumps = [{
+    speedbumps = {id : {
         'coordinates' : d['geoData']['coordinates'],
-        'street' : d['Location']
-    } for id, d in speedbumps.items()]
+        'street' : d['Location'],
+        'id' : d['ID']
+    } for id, d in speedbumps.items()}
     return jsonify(speedbumps)
 
 @app.route('/CarCount')
