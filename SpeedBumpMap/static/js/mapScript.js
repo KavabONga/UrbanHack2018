@@ -70,7 +70,7 @@ function addCarCountView(map) {
                                          "<br><b>Суммарная масса</b>: " + data[c].summaryWeight + " (тонн)<br><hr>" +
                                          "Количество легковых: " + data[c].classes['light-weighted'] + "<br>" +
                                          "Количество средних: " + data[c].classes['average-weighted'] + "<br>" +
-                                         "Количество тяжёлых: " + data[c].classes['heavy-weighted'] 
+                                         "Количество тяжёлых: " + data[c].classes['heavy-weighted']
                     }, {
                         preset : "islands#redCircleIcon"
                     })
@@ -136,6 +136,7 @@ function addRealTimeView(map) {
                 heatmap.setMap(map);
                 var i = 0, step = parseInt(data.length / 2000);
                 addInterval = setInterval(function() {
+                    console.log(i);
                     for (j = i; j < Math.min(i + step, data.length); j += 1) {
                         if (!(data[j].ID in weightDict)) {
                             featuresData.features.push(
